@@ -1,6 +1,9 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
+// Controller
+pros::Controller master(pros::E_CONTROLLER_MASTER);
+
 // Create Drivetrain Motor Groupings (CLARIFY PORTS/DIRECTIONS)
 pros::MotorGroup left_drive_motors({20, -9, -10}, pros::MotorGearset::blue); // left motors on ports 1, 2, 3
 pros::MotorGroup right_drive_motors({-11, 2, 3}, pros::MotorGearset::blue); // right motors on ports 4, 5, 6
@@ -79,6 +82,12 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
                         &throttle_curve, 
                         &steer_curve
 );
+
+pros::rtos::Task autonomousMobile(autoMogo);
+
+pros::rtos::Task ringHolding(holdRing);
+
+pros::rtos::Task Brown_Task(brownTask);
 
 /**
  * A callback function for LLEMU's center button.
@@ -168,7 +177,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	pros::Controller master(pros::E_CONTROLLER_MASTER);
+    clampActivated(false);
+    setAutoMogo(true);
 
     while (true) {
         // get left y and right x positions
@@ -177,6 +187,35 @@ void opcontrol() {
 
         // move the robot
         chassis.arcade(leftY, rightX);
+
+        if (master.get_digital(DIGITAL_R1)) {
+            setIntake(450);
+        } else if (master.get_digital(DIGITAL_R2)) {
+            stopIntake();
+        } else if (master.get_digital(DIGITAL_L1)) {
+            setIntake(-400);
+        } else if (master.get_digital(DIGITAL_L2)) {
+            intake.move_relative(-100, 400);
+        }
+
+        if (master.get_digital(DIGITAL_Y)) {
+            clampActivated(false);
+        } else if (master.get_digital(DIGITAL_B)) {
+            clampActivated(true);
+        }
+
+        if (master.get_digital(DIGITAL_UP)) {
+            lemlib::PID brownPID(0.02, 0.0, 0.0, 0);
+            setBrownTarget(BROWN_SCORE);
+        } else if (master.get_digital(DIGITAL_RIGHT)) {
+            lemlib::PID brownPID(0.04, 0.0, 0.08, 0);
+            setBrownTarget(BROWN_ACTIVE);
+        } else if (master.get_digital(DIGITAL_DOWN)) {
+            lemlib::PID brownPID(0.04, 0.0, 0.08, 0);
+            setBrownTarget(BROWN_REST);
+        } else if (master.get_digital(DIGITAL_LEFT)) {
+            mogoSearchEnabled = false;
+        }
 
         // delay to save resources
         pros::delay(25);
