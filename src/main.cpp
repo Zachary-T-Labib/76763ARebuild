@@ -1,9 +1,6 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-// Controller
-pros::Controller master(pros::E_CONTROLLER_MASTER);
-
 // Create Drivetrain Motor Groupings (CLARIFY PORTS/DIRECTIONS)
 pros::MotorGroup left_drive_motors({20, -9, -10}, pros::MotorGearset::blue); // left motors on ports 1, 2, 3
 pros::MotorGroup right_drive_motors({-11, 2, 3}, pros::MotorGearset::blue); // right motors on ports 4, 5, 6
@@ -156,11 +153,16 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
+
+ASSET(rush_txt);
+ASSET(rush2_txt);
+ASSET(ringRush_txt);
+
 void autonomous() {
 	// set position to x:0, y:0, heading:0
-    chassis.setPose(0, 0, 0);
+    chassis.setPose(-60.591, 60.266, 90);
     // move 48" forwards
-    chassis.moveToPoint(0, 48, 10000);
+    chassis.follow(ringRush_txt, 15, 20000);
 }
 
 /**
