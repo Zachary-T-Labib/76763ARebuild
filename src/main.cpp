@@ -7,6 +7,8 @@ pros::rtos::Task ringHolding(holdRing);
 
 pros::rtos::Task Brown_Task(brownTask);
 
+pros::rtos::Task Color_Sorter(colorSorter);
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -32,6 +34,7 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize(); // initialize brain screen
     chassis.calibrate(); // calibrate sensors
+
     // print position to brain screen
     pros::Task screen_task([&]() {
         while (true) {
@@ -39,10 +42,12 @@ void initialize() {
             pros::lcd::print(0, "X: %f", chassis.getPose().x); // x
             pros::lcd::print(1, "Y: %f", chassis.getPose().y); // y
             pros::lcd::print(2, "Theta: %f", chassis.getPose().theta); // heading
+            pros::lcd::print(3, "Hue: %f", colorSort.get_hue()); // heading
             // delay to save resources
             pros::delay(20);
         }
     });
+    
 }
 
 /**
@@ -100,8 +105,12 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+    printf("hi");
     clampActivated(false);
     setAutoMogo(true);
+    activateColorSort(true);
+    setColor('b');
+    setIntake(450);
 
     while (true) {
         // get left y and right x positions

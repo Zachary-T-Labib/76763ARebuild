@@ -3,6 +3,7 @@
 #include "api.h"
 
 // Your motors, sensors, etc. should go here.  Below are examples
+inline pros::Optical colorSort(17);
 
 inline pros::Motor intake(-1, pros::v5::MotorGears::blue);
 inline pros::Motor intake5_5w(-4, pros::v5::MotorGears::green);

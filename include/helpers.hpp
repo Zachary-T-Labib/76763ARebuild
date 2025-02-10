@@ -30,3 +30,16 @@ void autoMogo();
 void setAutoMogo(bool activated);
 void releaseMogo();
 void activateRingHolding(bool activated);
+
+extern int BLUE_HIGH;
+extern int BLUE_LOW;
+extern int RED_HIGH;
+extern int RED_LOW;
+void setColor(char color);
+
+void activateColorSort(bool activated);
+extern bool colorSortEnabled;
+extern int oppColorMin;
+extern int oppColorMax;
+void colorSorter();
+

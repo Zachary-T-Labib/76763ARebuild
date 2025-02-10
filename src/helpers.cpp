@@ -4,6 +4,23 @@ double BROWN_REST = 35300;
 double BROWN_ACTIVE = 33300;
 double BROWN_SCORE = 22400;
 
+int BLUE_LOW = 200;
+int BLUE_HIGH = 270;
+int RED_LOW = 1;
+int RED_HIGH = 25;
+int oppColorMin = 0;
+int oppColorMax = 0;
+
+void setColor(char color) {
+    if (color == 'r') {
+        oppColorMax = RED_HIGH;
+        oppColorMin = RED_LOW;
+    } else if (color == 'b') {
+        oppColorMax = BLUE_HIGH;
+        oppColorMin = BLUE_LOW;
+    }
+}
+
 void setIntake(int intakePower) {
     intake.move_velocity(intakePower);
     intake5_5w.move_velocity(intakePower*0.33333333333);
@@ -37,6 +54,10 @@ void activateRingHolding(bool activated) {
 
 void activateIntakeVoltageControl(bool activated) {
     intakeVoltageActive = activated;
+}
+
+void activateColorSort(bool activated) {
+    colorSortEnabled = activated;
 }
 
 bool intakeVoltageActive = false;
@@ -82,6 +103,27 @@ void holdRing() {
         }
 
     pros::delay(20);
+    }
+}
+
+bool colorSortEnabled = false;
+void colorSorter() {
+    printf("workijg");
+    pros::delay(2000);
+    colorSort.set_integration_time(5);
+    colorSort.set_led_pwm(100);
+
+    while (true) {
+       while(colorSortEnabled) {
+            if ((colorSort.get_hue() >= oppColorMin && colorSort.get_hue() <= oppColorMax) && colorSort.get_proximity() < 250) {
+                // pros::delay(1);
+                setIntake(-450);
+                pros::delay(100);
+                setIntake(450);
+            }
+
+       }
+       pros::delay(20);
     }
 }
 
