@@ -1,13 +1,15 @@
 #include "main.h"
 #include "lemlib/api.hpp"
 
-pros::rtos::Task autonomousMobile(autoMogo);
+pros::rtos::Task autonomousMogo(autoMogo);
 
 pros::rtos::Task ringHolding(holdRing);
 
 pros::rtos::Task Brown_Task(brownTask);
 
 pros::rtos::Task Color_Sorter(colorSorter);
+
+pros::rtos::Task brown_Macro(brownMacro);
 
 /**
  * A callback function for LLEMU's center button.
@@ -110,7 +112,6 @@ void opcontrol() {
     setAutoMogo(true);
     activateColorSort(true);
     setColor('b');
-    setIntake(450);
 
     while (true) {
         // get left y and right x positions
@@ -137,13 +138,13 @@ void opcontrol() {
         }
 
         if (master.get_digital(DIGITAL_UP)) {
-            lemlib::PID brownPID(0.02, 0.0, 0.0, 0);
+            brownMacroActivated = false;
             setBrownTarget(BROWN_SCORE);
         } else if (master.get_digital(DIGITAL_RIGHT)) {
-            lemlib::PID brownPID(0.04, 0.0, 0.08, 0);
+            brownMacroActivated = true;
             setBrownTarget(BROWN_ACTIVE);
         } else if (master.get_digital(DIGITAL_DOWN)) {
-            lemlib::PID brownPID(0.04, 0.0, 0.08, 0);
+            brownMacroActivated = false;
             setBrownTarget(BROWN_REST);
         } else if (master.get_digital(DIGITAL_LEFT)) {
             mogoSearchEnabled = false;

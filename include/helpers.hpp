@@ -18,7 +18,9 @@ void brownWait();
 void brownTask();
 void setBrownTarget(double target);
 extern lemlib::PID brownControl;
+extern lemlib::PID brownScoreControl;
 extern double brownError;
+extern double brownTarget;
 
 extern bool holdRingEnabled;
 extern bool activeRingHolding;
@@ -42,4 +44,7 @@ extern bool colorSortEnabled;
 extern int oppColorMin;
 extern int oppColorMax;
 void colorSorter();
+
+extern bool brownMacroActivated;
+void brownMacro();
 
