@@ -6,7 +6,7 @@ double BROWN_SCORE = 22400;
 
 double brownTarget = BROWN_REST;
 
-int BLUE_LOW = 200;
+int BLUE_LOW = 150;
 int BLUE_HIGH = 270;
 int RED_LOW = 1;
 int RED_HIGH = 25;
@@ -128,9 +128,13 @@ void colorSorter() {
        while(colorSortEnabled) {
             if ((colorSort.get_hue() >= oppColorMin && colorSort.get_hue() <= oppColorMax) && colorSort.get_proximity() < 250) {
                 // pros::delay(10);
-                stopIntake();
+                double currentPoition = intake.get_position();
+                while (intake.get_position() < currentPoition + 160) {
+                // Continue running this loop as long as the motor is not within +-5 units of its goal
+                pros::delay(2);
+                }
                 setIntake(-450);
-                pros::delay(100);
+                pros::delay(250);
                 setIntake(450);
             }
 
