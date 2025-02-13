@@ -137,7 +137,7 @@ void colorSorter() {
                 pros::delay(250);
                 setIntake(450);
             }
-
+            pros::delay(2);
        }
        pros::delay(5);
     }
