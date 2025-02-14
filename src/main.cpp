@@ -88,9 +88,7 @@ ASSET(ringRush_txt);
 
 void autonomous() {
 	// set position to x:0, y:0, heading:0
-    chassis.setPose(-60.591, 60.266, 90);
-    // move 48" forwards
-    chassis.follow(ringRush_txt, 15, 20000);
+    skills();
 }
 
 /**

@@ -1,7 +1,7 @@
 #include "main.h"
 
 ASSET(psuedoSkillsFirstGoal_txt);
-ASSET(psuedoSkilsBottomFour_txt);
+ASSET(psuedoSkillsBottomFour_txt);
 ASSET(psuedoSkillsPlaceGoalOne_txt);
 ASSET(psuedoSkillsSecondGoal_txt);
 ASSET(psuedoSkillsTopFour_txt);
@@ -24,7 +24,7 @@ void skills() {
 
     chassis.follow(psuedoSkillsFirstGoal_txt, 15, 20000, false);
 
-    chassis.follow(psuedoSkilsBottomFour_txt, 15, 20000);
+    chassis.follow(psuedoSkillsBottomFour_txt, 15, 20000);
 
     chassis.turnToPoint(-50.842, -59.23, 20000, {.forwards = false, .minSpeed = 127, .earlyExitRange = 20});
 
