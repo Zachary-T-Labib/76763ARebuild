@@ -17,7 +17,7 @@ void skills() {
 
     chassis.setPose(-60.296, 0.131, 90);
 
-    setIntake(450);
+    setIntake(450, 200);
     pros::delay(750);
 
     chassis.turnToPoint(0, 0, 20000, {.forwards = false, .minSpeed = 127, .earlyExitRange = 20});
@@ -87,7 +87,7 @@ void redGoalRush() {
 
     chassis.turnToPoint(-19.694, 24.371, 20000, {.minSpeed = 127, .earlyExitRange = 20});
 
-    setIntake(450);
+    setIntake(450, 200);
     chassis.follow(ringRushGetLineRings_txt, 15, 20000);
 
     chassis.follow(ringRushGetUpperRings_txt, 15, 20000);
@@ -123,7 +123,7 @@ void redRingRush() {
 
     chassis.turnToPoint(-11.306, -50.841, 20000, {.minSpeed = 127, .earlyExitRange = 20});
 
-    setIntake(450);
+    setIntake(450, 200);
 
     chassis.follow(goalRushLowerRing_txt, 15, 20000);
 

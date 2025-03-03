@@ -4,7 +4,7 @@
 extern double BROWN_REST;
 extern double BROWN_ACTIVE;
 extern double BROWN_SCORE;
-void setIntake(int intakePower);
+void setIntake(int intakePower, int frontIntakePower);
 
 extern bool intakeVoltageActive;
 void activateIntakeVoltageControl(bool activated);
@@ -37,6 +37,7 @@ extern int BLUE_HIGH;
 extern int BLUE_LOW;
 extern int RED_HIGH;
 extern int RED_LOW;
+extern bool ejectRing;
 void setColor(char color);
 
 void activateColorSort(bool activated);

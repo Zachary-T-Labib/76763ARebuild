@@ -88,7 +88,10 @@ ASSET(ringRush_txt);
 
 void autonomous() {
 	// set position to x:0, y:0, heading:0
-    skills();
+    // set position to x:0, y:0, heading:0
+    chassis.setPose(0, 0, 0);
+    // turn to face heading 90 with a very long timeout
+    chassis.moveToPose(0, 24, 0, 10000);
 }
 
 /**
@@ -120,11 +123,11 @@ void opcontrol() {
         chassis.arcade(leftY, rightX);
 
         if (master.get_digital(DIGITAL_R1)) {
-            setIntake(450);
+            setIntake(450, 200);
         } else if (master.get_digital(DIGITAL_R2)) {
             stopIntake();
         } else if (master.get_digital(DIGITAL_L1)) {
-            setIntake(-400);
+            setIntake(-400, -200);
         } else if (master.get_digital(DIGITAL_L2)) {
             intake.move_relative(-100, 400);
         }

@@ -1,8 +1,8 @@
 #include "main.h"
 
 double BROWN_REST = 35300;
-double BROWN_ACTIVE = 33300;
-double BROWN_SCORE = 22400;
+double BROWN_ACTIVE = 33500;
+double BROWN_SCORE = 19800;
 
 double brownTarget = BROWN_REST;
 
@@ -12,6 +12,7 @@ int RED_LOW = 1;
 int RED_HIGH = 25;
 int oppColorMin = 0;
 int oppColorMax = 0;
+bool ejectRing = false;
 
 void setColor(char color) {
     if (color == 'r') {
@@ -23,9 +24,9 @@ void setColor(char color) {
     }
 }
 
-void setIntake(int intakePower) {
+void setIntake(int intakePower, int frontIntakePower) {
     intake.move_velocity(intakePower);
-    intake5_5w.move_velocity(intakePower*0.33333333333);
+    intake5_5w.move_velocity(frontIntakePower);
 }
 
 void stopIntake() {
@@ -75,8 +76,8 @@ void intakeVoltage() {
     }
 }
 // d 0.1
-lemlib::PID brownControl(0.04, 0.0, 0.05, 0);
-lemlib::PID brownScoreControl(0.02, 0.0, 0.0, 0);
+lemlib::PID brownControl(0.035, 0.0, 0.0, 0);
+lemlib::PID brownScoreControl(0.01, 0.0, 0.0, 0);
 
 double brownError = BROWN_REST - brownAngle.get_position();
 
@@ -103,6 +104,8 @@ void setBrownTarget(double target) {
 bool holdRingEnabled = false;
 bool activeRingHolding = false;
 void holdRing() {
+    colorSort.set_integration_time(1);
+    colorSort.set_led_pwm(100);
     pros::delay(2000);
     while (true) {
         while (holdRingEnabled) {
@@ -111,6 +114,10 @@ void holdRing() {
             }
 
             pros::delay(20);
+        }
+
+        if ((colorSort.get_hue() >= oppColorMin && colorSort.get_hue() <= oppColorMax) && colorSort.get_proximity() < 250) {
+            ejectRing = true;
         }
 
     pros::delay(20);
@@ -126,18 +133,24 @@ void colorSorter() {
 
     while (true) {
        while(colorSortEnabled) {
-            if ((colorSort.get_hue() >= oppColorMin && colorSort.get_hue() <= oppColorMax) && colorSort.get_proximity() < 250) {
-                // pros::delay(10);
-                double currentPoition = intake.get_position();
-                while (intake.get_position() < currentPoition + 160) {
-                // Continue running this loop as long as the motor is not within +-5 units of its goal
-                pros::delay(2);
+            if (ejectRing) {
+
+                if (topIntakeSensor.get() <= 72) {
+                    double currentPoition = intake.get_position();
+                    while (intake.get_position() < currentPoition + 20) {
+                        // Continue running this loop as long as the motor is not within +-5 units of its goal
+                    pros::delay(2);
+                    }
+
+                    setIntake(-450, 200);
+                    pros::delay(250);
+                    setIntake(450, 200);
+
+                    ejectRing = false;
                 }
-                setIntake(-450);
-                pros::delay(250);
-                setIntake(450);
+
             }
-            pros::delay(2);
+            pros::delay(5);
        }
        pros::delay(5);
     }
@@ -181,24 +194,24 @@ bool brownMacroActivated = false;
 void brownMacro() {
    while (true){
        if (brownMacroActivated) {
-           if (intakeOccupied.get() <= 72) {
+           if (topIntakeSensor.get() <= 72) {
                // Ring into brown
-               setIntake(450);
-               pros::delay(750);
+               setIntake(450, 200);
+               pros::delay(400);
 
 
                // Retract
-               setIntake(-250);
+               setIntake(-250, 200);
                pros::delay(250);
 
 
                // Re-Slam
-               setIntake(450);
+               setIntake(450, 200);
                pros::delay(300);
 
 
                // Retract
-               setIntake(-250);
+               setIntake(-250, 200);
                pros::delay(250);
 
 
